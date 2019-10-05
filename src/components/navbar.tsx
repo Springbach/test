@@ -1,32 +1,23 @@
 import React from 'react';
-import { useContext } from 'react';
-//import styled, { ThemeContext, ThemeInterface } from 'styled-components';
-import { ThemeContext, DefaultTheme } from 'styled-components';
+import { NavLink } from 'react-router-dom'
+import { DefaultTheme } from 'styled-components';
 import Button from './button';
 
 interface NavbarProps {
   theme?: DefaultTheme;
   className?: string;
-  links: Array<{ name: string; to: string, private: true | false }>;
-  auth: true | false;
+  links: Array<{ name: string; to: string, private: boolean, showLink: boolean }>;
+  auth: boolean;
 }
 
-//const H1 = styled.h1`
-//  color: ${props => props.theme.colors.main};
-//  font-weight: bold;
-//`;
-
 const Navbar: React.FC<NavbarProps> = props => {
-  const themeContext = useContext(ThemeContext);
-  console.log('Current theme: ', themeContext);
   const { links, auth } = props;
-  const NavLinks: any = () => (auth?links:links.filter((link: { name: string, to: string, icon?: any, private: true | false }) => !link.private)).map((link: { name: string, to: string, icon?: any, private: true | false }) => <li key={link.name}><a href={link.to}>{link.name}</a></li>);
+  const NavLinks: any = () => (auth?links.filter(link=>link.showLink):links.filter(link => !link.private&&link.showLink)).map(link => <li key={link.name}><NavLink exact to={link.to}>{link.name}</NavLink></li>);
   return (
-    <div>
-      {/*<a href={brand.to}>{brand.name}</a>*/}
+    <nav>
       <NavLinks />
       <Button auth={auth}/>
-    </div>)
+    </nav>)
 }
 
 export default Navbar;
