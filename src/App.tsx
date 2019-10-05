@@ -1,10 +1,16 @@
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './theme';
+import Header from './components/header';
+
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-
-    </div>
+    <ThemeProvider theme={theme}>
+          <div>
+              <Header />
+          </div>
+    </ ThemeProvider>
   );
 }
 
