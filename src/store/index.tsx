@@ -1,9 +1,21 @@
-import React from 'react'
-import { Auth } from './auth'
+import React, { useReducer } from "react";
+import { initialState, IState, Actions, reducer } from "./auth";
 
-const providers = [<Auth.Provider />]
 
-const Store = (props: any) =>
-  providers.reduce((children, parent) => React.cloneElement(parent, { children }), props.children)
+interface IContextProps {
+  state: IState;
+  //dispatch: ({type}:{type:string}) => void;
+  dispatch: React.Dispatch<Actions>;
+}
 
-export { Store, Auth }
+
+export const StoreCTX = React.createContext({} as IContextProps);
+
+export function Store(props: any) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const value = { state, dispatch };
+  return (
+    <StoreCTX.Provider value={value}>{props.children}</StoreCTX.Provider>
+  );
+}
