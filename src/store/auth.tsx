@@ -1,9 +1,6 @@
-export interface IState {
+export interface State {
   auth: boolean;
   userId: string;
-  wait: boolean;
-  error: 0|1|2|3;
-  attemps: number;
 }
 
 interface LOGOUT {
@@ -11,41 +8,23 @@ interface LOGOUT {
 }
 
 interface LOGIN {
-  type: "LOGIN_ATTEMP";
-  email: string;
-  password: string;
-}
-
-interface SRSUCCESS {
-  type: "SERVER_REQUEST_SUCCESS";
+  type: "LOGIN";
   userId: string;
-  auth: boolean;
 }
 
-interface SRFAIL {
-  type: "SERVER_REQUEST_FAIL";
-  error: 0|1|2|3;
-}
+export type Actions = LOGIN | LOGOUT;
 
-export type Actions = LOGIN | LOGOUT | SRSUCCESS | SRFAIL;
-
-export const initialState: IState = {
+export const initialState: State = {
   auth: false,
   userId: "",
-  wait: false,
-  error: 0,
-  attemps: 0,
 };
 
-export const reducer = (state: IState, action: Actions) => {
+export const reducer = (state: State, action: Actions) => {
   switch (action.type) {
     case 'LOGOUT':
       return { ...state, auth: false, userId: "" };
-    case 'LOGIN_ATTEMP':
-      return { ...state, email: action.email, password: action.password, attemps: ++state.attemps };
-    case 'SERVER_REQUEST_SUCCESS':
+    case 'LOGIN':
+       console.log('LOGIN ACTION');
        return {...state, userId: action.userId, auth: true};
-    case 'SERVER_REQUEST_FAIL':
-       return {...state, error: action.error}
   }
 };

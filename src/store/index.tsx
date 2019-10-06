@@ -1,15 +1,15 @@
 import React, { useReducer } from "react";
-import { initialState, IState, Actions, reducer } from "./auth";
+import { initialState, State, Actions, reducer } from "./auth";
 
 
-interface IContextProps {
-  state: IState;
+interface ContextProps {
+  state: State;
   //dispatch: ({type}:{type:string}) => void;
   dispatch: React.Dispatch<Actions>;
 }
 
 
-export const StoreCTX = React.createContext({} as IContextProps);
+export const StoreCTX = React.createContext({} as ContextProps);
 
 export function Store(props: any) {
   const [state, dispatch] = useReducer(reducer, initialState);
