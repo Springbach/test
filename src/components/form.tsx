@@ -7,7 +7,6 @@ import Footer from './footer';
 interface FormValues {
   email: string;
   password: string;
-  server: string;
 }
 
 interface ErrorProps {
@@ -107,11 +106,15 @@ const FormGroup = styled.div`
     background: #4285F4;
     width: 50%;
     border: 0;
-    border-radius: 4px;
+    border-radius: 0.4em;
     color: #FFF;
-    font-weight: 700;
+    font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    &:hover {
+      background: rgba(66, 133, 244, 0.8);
+    }
   }
   button:disabled {
     background: rgb(232, 240, 254);
@@ -168,20 +171,40 @@ const Triangle = styled.div`
 
 const ServerError = styled.div<ErrorProps>`
   position: absolute;
+  font-size: 16px;
   top: 5px;
   right: 5px;
   padding: 5px 10px;
   color: white;
   background-color: #FF4C4C;
   border-radius: 10px;
-  display: ${props => props.show ? 'block' : 'none'};
+  display: ${props => props.show ? 'flex' : 'none'};
+  flex-direction: column;
+`;
+
+const ProgressBar = styled.div`
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.2);
+    width: 100%;
+`;
+
+const progressAnimation = keyframes`
+    from { width: 0%;}
+    to { width: 100%;}
+`;
+
+const ProgressLine = styled.div`
+    width: 100%;
+    background: #fff;
+    height: 3px;
+    animation: ${progressAnimation} 5s linear;
 `;
 
 const StyledForm = (props: FormikProps<FormValues>) => {
-  const { touched, errors, isSubmitting } = props;
+  const { touched, errors, status, isSubmitting } = props;
   return <Container>
             <FormWrapper>
-              <ServerError show = {Boolean(errors.server)}>{errors.server}</ServerError>
+              <ServerError show = {Boolean(status)}><p>{Boolean(status)&&status}</p><ProgressBar><ProgressLine/></ProgressBar></ServerError>
               <Icon>
                   <img alt="" src={Image} />
               </Icon>
@@ -200,7 +223,7 @@ const StyledForm = (props: FormikProps<FormValues>) => {
                       </FormGroup>
                       <FormGroup>
                             {isSubmitting?<Spinner />:null}
-                            <button type="submit" disabled={isSubmitting}>
+                            <button type="submit" disabled={isSubmitting||Boolean(status)}>
                               {isSubmitting?'Проверяю...':'Войти'}
                             </button>
                       </FormGroup>

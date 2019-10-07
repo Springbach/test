@@ -3,39 +3,19 @@
 import { withFormik } from 'formik';
 import { Validate } from '../helpers/validator';
 import InnerForm from './form';
-//FormikErrors,
+import axios from "axios";
 
 // Shape of form values
 interface FormValues {
   email: string;
   password: string;
-  server: string;
 }
 
-/*
-const InnerForm = (props: FormikProps<FormValues>) => {
-  const { touched, errors, isSubmitting } = props;
-  return (
-    <Form>
-      <Field type="email" name="email" />
-      {touched.email && errors.email && <div>{errors.email}</div>}
-
-      <Field type="password" name="password" />
-      {touched.password && errors.password && <div>{errors.password}</div>}
-      <div>
-      <button type="submit" disabled={isSubmitting}>
-        Войти
-      </button>
-      </div>
-    </Form>
-  );
-};
-*/
 // The type of props LoginForm receives
 interface LoginFormProps {
   initialEmail?: string;
   dispatch: any;
-  history: any;
+  history?: any;
 }
 
 // Wrap our form with the using withFormik HoC
@@ -45,13 +25,12 @@ const LoginForm = withFormik<LoginFormProps, FormValues >({
     return {
       email: props.initialEmail || '',
       password: '',
-      server: '',
     };
   },
 
   // custom validation function (can be async!)
 
-  validate: (values: FormValues) => {
+  validate: (values: FormValues, props) => {
     let errors: any = {};
     if (!values.email) {
       errors.email = 'Заполните поле';
@@ -66,15 +45,38 @@ const LoginForm = withFormik<LoginFormProps, FormValues >({
     return errors;
   },
 
-  handleSubmit: (val, {props: {dispatch, history}, setSubmitting, resetForm, setErrors}) => {
-    setTimeout(()=>{
-      console.log("creds is valid", val);
-      setErrors({server: 'Неверный  email или пароль'})
-      setSubmitting(false);
-      //dispatch({type:'LOGIN', userId: '1'});
-      //history.push('/profile');
-      //resetForm({email: val.email, password: ""});
-    }, 2000)
+  handleSubmit: async (formValues, {props: {history, dispatch}, setSubmitting, setFieldValue, setStatus }) => {
+     try {
+      const response = await axios.post(
+        'https://mysterious-reef-29460.herokuapp.com/api/v1/validate',
+        formValues
+      );
+      const { status, message, data } = response.data;
+      if (status === 'err') {
+        setSubmitting(false);
+        setStatus(message);
+        //remove status message after 5 seconds
+        setTimeout(()=>{setStatus(undefined)}, 5000);
+        setFieldValue('password', '')
+        return
+      }
+      //SUCCESSFUL LOGIN:
+      dispatch({type:'LOGIN', userId: data.id});
+      //redirect to /profile page
+      history.push('/profile');
+
+    } catch (exception) {
+
+      // Expected: 400 status code
+      if (exception.response && exception.response.status === 400) {
+        // Display server validation errors
+        setStatus('Сервер недоступен');
+        //remove status message after 5 seconds
+        setTimeout(()=>{setStatus(undefined)}, 5000);
+      }
+    }
+
+    setSubmitting(false);
   },
 })(InnerForm);
 
