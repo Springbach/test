@@ -15,6 +15,7 @@ function Validate(p: Param) {
         case 'email':
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.value);
         case 'password':
+            //special rules for password
             return true;
         default:
             return false;

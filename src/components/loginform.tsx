@@ -1,14 +1,18 @@
-import React from 'react';
-import { withFormik, FormikProps, Form, Field } from 'formik';
+//import React from 'react';
+//import { withFormik, FormikProps, Form, Field } from 'formik';
+import { withFormik } from 'formik';
 import { Validate } from '../helpers/validator';
+import InnerForm from './form';
 //FormikErrors,
 
 // Shape of form values
 interface FormValues {
   email: string;
   password: string;
+  server: string;
 }
 
+/*
 const InnerForm = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
@@ -26,7 +30,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
     </Form>
   );
 };
-
+*/
 // The type of props LoginForm receives
 interface LoginFormProps {
   initialEmail?: string;
@@ -41,6 +45,7 @@ const LoginForm = withFormik<LoginFormProps, FormValues >({
     return {
       email: props.initialEmail || '',
       password: '',
+      server: '',
     };
   },
 
@@ -53,17 +58,22 @@ const LoginForm = withFormik<LoginFormProps, FormValues >({
     } else if (!Validate({type: 'email', value: values.email})) {
       errors.email = 'Неверный e-mail';
     }
+    if (!values.password) {
+      errors.password = 'Заполните поле';
+    } else if (!Validate({type: 'password', value: values.password})) {
+      //errors.password = 'Пароль не менее 8 символов';
+    }
     return errors;
   },
 
-  handleSubmit: (val, {props: {dispatch, history}, setSubmitting, resetForm}) => {
+  handleSubmit: (val, {props: {dispatch, history}, setSubmitting, resetForm, setErrors}) => {
     setTimeout(()=>{
       console.log("creds is valid", val);
+      setErrors({server: 'Неверный  email или пароль'})
       setSubmitting(false);
-      dispatch({type:'LOGIN', userId: '1'});
-      history.push('/profile');
+      //dispatch({type:'LOGIN', userId: '1'});
+      //history.push('/profile');
       //resetForm({email: val.email, password: ""});
-
     }, 2000)
   },
 })(InnerForm);
