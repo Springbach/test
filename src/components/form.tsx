@@ -1,8 +1,10 @@
 import React from 'react';
 import { FormikProps, Form, Field } from 'formik';
 import Image from '../images/login.png';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Footer from './footer';
+import Spinner from './spinner';
+import ProgressBar from './progressbar';
 // Shape of form values
 interface FormValues {
   email: string;
@@ -121,31 +123,6 @@ const FormGroup = styled.div`
   }
 `;
 
-const rotate = keyframes`
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(359deg);
-    }
-`;
-
-const Spinner = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: 20px;
-  height: 20px;
-  border: 4px #4285F4 solid;
-  border-top: 4px white solid;
-  border-bottom: 4px white solid;
-  border-radius: 50%;
-  animation: ${rotate} .6s infinite linear;
-`;
-
 const Error =
   styled.div<ErrorProps>`
   position: absolute;
@@ -182,29 +159,11 @@ const ServerError = styled.div<ErrorProps>`
   flex-direction: column;
 `;
 
-const ProgressBar = styled.div`
-    border-radius: 3px;
-    background: rgba(0, 0, 0, 0.2);
-    width: 100%;
-`;
-
-const progressAnimation = keyframes`
-    from { width: 0%;}
-    to { width: 100%;}
-`;
-
-const ProgressLine = styled.div`
-    width: 100%;
-    background: #fff;
-    height: 3px;
-    animation: ${progressAnimation} 5s linear;
-`;
-
 const StyledForm = (props: FormikProps<FormValues>) => {
   const { touched, errors, status, isSubmitting } = props;
   return <Container>
             <FormWrapper>
-              <ServerError show = {Boolean(status)}><p>{Boolean(status)&&status}</p><ProgressBar><ProgressLine/></ProgressBar></ServerError>
+              <ServerError show = {Boolean(status)}><p>{Boolean(status)&&status}</p><ProgressBar/></ServerError>
               <Icon>
                   <img alt="" src={Image} />
               </Icon>
@@ -222,7 +181,7 @@ const StyledForm = (props: FormikProps<FormValues>) => {
                         <Error show = {Boolean(touched.password && errors.password)}>{errors.password}<Triangle/></Error>
                       </FormGroup>
                       <FormGroup>
-                            {isSubmitting?<Spinner />:null}
+                            {isSubmitting?<Spinner height={'20px'} width={'20px'} border={'4px'}/>:null}
                             <button type="submit" disabled={isSubmitting||Boolean(status)}>
                               {isSubmitting?'Проверяю...':'Войти'}
                             </button>

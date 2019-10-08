@@ -7,9 +7,7 @@ import { StoreCTX } from '../../store';
 
 const Login: React.FC = (props) => {
    const { dispatch } = useContext(StoreCTX);
-   return <div>
-              <LoginForm dispatch = { dispatch } { ...props }/>
-          </div>
+   return <LoginForm dispatch = { dispatch } { ...props }/>          
 }
 
 export default Login;

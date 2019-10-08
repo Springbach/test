@@ -3,6 +3,7 @@ export interface State {
   userId: string;
 }
 
+
 interface LOGOUT {
   type: "LOGOUT";
 }
@@ -24,7 +25,8 @@ export const reducer = (state: State, action: Actions) => {
     case 'LOGOUT':
       return { ...state, auth: false, userId: "" };
     case 'LOGIN':
-       console.log('LOGIN ACTION');
        return {...state, userId: action.userId, auth: true};
+    default:
+        return  state;
   }
 };

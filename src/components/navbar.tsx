@@ -23,12 +23,11 @@ const Header = styled.nav`
   z-index: 100;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 0 40px;
+  align-items: center;  
 `;
 
 const Center = styled.div`
-  width: 950px;
+  width: 800px;
   display: flex;
 `;
 
