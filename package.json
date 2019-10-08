@@ -2,6 +2,10 @@
   "name": "demo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "6.11.3",
+    "node": "8.10.0"
+  },
   "dependencies": {
     "@mdi/js": "^4.4.95",
     "@mdi/react": "^1.2.1",
